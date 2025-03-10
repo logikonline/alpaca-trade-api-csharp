@@ -12,9 +12,9 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>8.0.0.3</AssemblyVersion>
-    <FileVersion>8.0.0.3</FileVersion>
-    <Version>8.0.0-beta3</Version>
+    <AssemblyVersion>8.0.2.5</AssemblyVersion>
+    <FileVersion>8.0.2.5</FileVersion>
+    <Version>8.0.2-beta5</Version>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -45,7 +45,9 @@
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <RestoreLockedMode>true</RestoreLockedMode>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <SuppressTrimAnalysisWarnings>true</SuppressTrimAnalysisWarnings>
+  </PropertyGroup>
   <PropertyGroup>
     <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
     <!--<GenerateCompatibilitySuppressionFile>true</GenerateCompatibilitySuppressionFile>-->
@@ -74,7 +76,13 @@
   <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <EmbeddedResource Include="ILLink.Descriptors.xml">
+      <LogicalName>ILLink.Descriptors.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="..\Icon.png" Pack="true" PackagePath="icon.png" />
     <None Include="README.md" Pack="true" PackagePath="\" />

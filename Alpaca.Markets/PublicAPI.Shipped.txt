@@ -1187,6 +1187,7 @@ Alpaca.Markets.OptionsTradingLevel
 Alpaca.Markets.OptionsTradingLevel.CoveredCallCashSecuredPut = 1 -> Alpaca.Markets.OptionsTradingLevel
 Alpaca.Markets.OptionsTradingLevel.Disabled = 0 -> Alpaca.Markets.OptionsTradingLevel
 Alpaca.Markets.OptionsTradingLevel.LongCallPut = 2 -> Alpaca.Markets.OptionsTradingLevel
+Alpaca.Markets.OptionsTradingLevel.MultiLeg = 3 -> Alpaca.Markets.OptionsTradingLevel
 Alpaca.Markets.OptionSnapshotRequest
 Alpaca.Markets.OptionSnapshotRequest.OptionsFeed.get -> Alpaca.Markets.OptionsFeed?
 Alpaca.Markets.OptionSnapshotRequest.OptionsFeed.set -> void

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+  <assembly fullname="Alpaca.Markets">
+    <type fullname="Alpaca.Markets.JsonAccount" preserve="all" />
+    <type fullname="Alpaca.Markets.JsonPortfolioHistory" preserve="all" />
+    <!-- Add other classes that need preservation -->
+  </assembly>
+  <assembly fullname="Newtonsoft.Json">
+    <type fullname="Newtonsoft.Json.Serialization.*" preserve="all" />
+  </assembly>
+</linker>

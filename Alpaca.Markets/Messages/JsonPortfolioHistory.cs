@@ -1,4 +1,6 @@
-﻿namespace Alpaca.Markets;
+﻿using Alpaca.Markets.Helpers;
+
+namespace Alpaca.Markets;
 
 [SuppressMessage("ReSharper", "StringLiteralTypo")]
 [DebuggerDisplay("{DebuggerDisplay,nq}", Type = nameof(IPortfolioHistory))]
@@ -7,7 +9,15 @@
     Justification = "Object instances of this class will be created by Newtonsoft.JSON library.")]
 internal sealed class JsonPortfolioHistory : IPortfolioHistory
 {
-    [DebuggerDisplay("{DebuggerDisplay,nq}", Type = nameof(IPortfolioHistoryItem))]
+	/// <summary>
+	/// Initializes a new instance of the <see cref="JsonAccount"/> class.
+	/// Required for JSON.NET deserialization.
+	/// </summary>
+	[JsonConstructor]
+	public JsonPortfolioHistory()
+	{
+	}
+	[DebuggerDisplay("{DebuggerDisplay,nq}", Type = nameof(IPortfolioHistoryItem))]
     private sealed class Item : IPortfolioHistoryItem
     {
         public Decimal? Equity { get; init; }
@@ -27,13 +37,16 @@ internal sealed class JsonPortfolioHistory : IPortfolioHistory
     private readonly List<IPortfolioHistoryItem> _items = [];
 
     [JsonProperty(PropertyName = "equity", Required = Required.Always)]
-    public List<Decimal?>? EquityList { get; set; }
+	[JsonConverter(typeof(DecimalListConverter))]
+	public List<Decimal?>? EquityList { get; set; }
 
     [JsonProperty(PropertyName = "profit_loss", Required = Required.Always)]
-    public List<Decimal?>? ProfitLossList { get; set; }
+	[JsonConverter(typeof(DecimalListConverter))]
+	public List<Decimal?>? ProfitLossList { get; set; }
 
     [JsonProperty(PropertyName = "profit_loss_pct", Required = Required.Always)]
-    public List<Decimal?>? ProfitLossPercentageList { get; set; }
+	[JsonConverter(typeof(DecimalListConverter))]
+	public List<Decimal?>? ProfitLossPercentageList { get; set; }
 
     [JsonProperty(PropertyName = "timestamp", Required = Required.Always,
         ItemConverterType = typeof(UnixSecondsDateTimeConverter))]

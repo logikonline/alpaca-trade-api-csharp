@@ -42,7 +42,7 @@ internal static partial class HttpClientExtensions
         return httpClient;
     }
 
-    private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
+	private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
         HttpClient httpClient,
         HttpMethod method,
         Uri endpointUri,
@@ -65,7 +65,7 @@ internal static partial class HttpClientExtensions
             .ConfigureAwait(false);
     }
 
-    private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
+	private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
         HttpClient httpClient,
         HttpMethod method,
         Uri endpointUri,
@@ -79,7 +79,7 @@ internal static partial class HttpClientExtensions
             .ConfigureAwait(false);
     }
 
-    private static async Task<TApi> callAndDeserializeAsync<TApi, TJson, TContent>(
+	private static async Task<TApi> callAndDeserializeAsync<TApi, TJson, TContent>(
         HttpClient httpClient,
         HttpMethod method,
         Uri endpointUri,
@@ -95,7 +95,7 @@ internal static partial class HttpClientExtensions
             .ConfigureAwait(false);
     }
 
-    private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
+	private static async Task<TApi> callAndDeserializeAsync<TApi, TJson>(
         HttpClient httpClient,
         HttpRequestMessage request,
         RateLimitHandler rateLimitHandler,
