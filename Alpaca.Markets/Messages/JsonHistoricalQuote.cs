@@ -3,7 +3,8 @@
 [DebuggerDisplay("{DebuggerDisplay,nq}", Type = nameof(IQuote))]
 internal sealed class JsonHistoricalQuote : IQuote, ISymbolMutable
 {
-    [JsonProperty(PropertyName = "t", Required = Required.Always)]
+	[JsonConverter(typeof(AssumeUtcIsoDateTimeConverter))]
+	[JsonProperty(PropertyName = "t", Required = Required.Always)]
     public DateTime TimestampUtc { get; set; }
 
     [JsonProperty(PropertyName = "ax", Required = Required.Always)]

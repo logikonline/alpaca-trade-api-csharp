@@ -6,7 +6,15 @@
     Justification = "Object instances of this class will be created by Newtonsoft.JSON library.")]
 internal sealed class JsonSnapshot : ISnapshot, ISymbolMutable
 {
-    [JsonProperty(PropertyName = "latestQuote", Required = Required.Default)]
+	/// <summary>
+	/// Initializes a new instance of the <see cref="JsonSnapshot"/> class.
+	/// Required for JSON.NET deserialization.
+	/// </summary>
+	[JsonConstructor]
+	public JsonSnapshot()
+	{
+	}
+	[JsonProperty(PropertyName = "latestQuote", Required = Required.Default)]
     public JsonHistoricalQuote? JsonQuote { get; set; }
 
     [JsonProperty(PropertyName = "latestTrade", Required = Required.Default)]

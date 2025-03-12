@@ -204,4 +204,34 @@ public interface IAccount
     /// </summary>
     [UsedImplicitly]
     Decimal? OptionsBuyingPower { get; }
+
+	/// <summary>
+	/// Gets Effective Buying Power.
+	/// </summary>
+	[UsedImplicitly]
+	Decimal? EffectiveBuyingPower { get; }
+
+	/// <summary>
+	/// Gets Portfolio value.
+	/// </summary>
+	[UsedImplicitly]
+	Decimal? PortfolioValue { get; }
+
+	/// <summary>
+	/// Gets Position market value.
+	/// </summary>
+	[UsedImplicitly]
+	Decimal? PositionMarketValue { get; }
+
+	/// <summary>
+	/// Gets Balance As Of.
+	/// </summary>
+	[UsedImplicitly]
+	String? BalanceAsOf { get; }
+
+	/// <summary>
+	/// Gets Intraday Adjustments.
+	/// </summary>
+	[UsedImplicitly]
+	Decimal? IntradayAdjustments { get; }
 }

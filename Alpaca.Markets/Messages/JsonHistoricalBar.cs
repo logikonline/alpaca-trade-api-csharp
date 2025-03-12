@@ -24,7 +24,8 @@ internal sealed class JsonHistoricalBar : IBar, ISymbolMutable
     [JsonProperty(PropertyName = "v", Required = Required.Always)]
     public Decimal Volume { get; set; }
 
-    [JsonProperty(PropertyName = "t", Required = Required.Always)]
+	[JsonConverter(typeof(AssumeUtcIsoDateTimeConverter))]
+	[JsonProperty(PropertyName = "t", Required = Required.Always)]
     public DateTime TimeUtc { get; set; }
 
     [JsonProperty(PropertyName = "vw", Required = Required.Default)]

@@ -12,11 +12,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyVersion>8.0.2.5</AssemblyVersion>
-    <FileVersion>8.0.2.5</FileVersion>
-    <Version>8.0.2-beta5</Version>
+    <AssemblyVersion>8.0.2.6</AssemblyVersion>
+    <FileVersion>8.0.2.6</FileVersion>
+    <Version>8.0.2-beta6</Version>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <ApiCompatGenerateSuppressionFile>true</ApiCompatGenerateSuppressionFile>
+  </PropertyGroup>
   <PropertyGroup>
     <PackageReleaseNotes>
 - Basic authentication was added to connect Broker API.

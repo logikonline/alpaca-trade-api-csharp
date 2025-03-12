@@ -63,15 +63,31 @@ internal sealed class AlpacaDataClient :
             await request.Validate().GetUriBuilderAsync(HttpClient, "snapshot").ConfigureAwait(false),
             RateLimitHandler, cancellationToken).ConfigureAwait(false);
 
-    public async Task<IReadOnlyDictionary<String, ISnapshot>> ListSnapshotsAsync(
-        LatestMarketDataListRequest request,
-        CancellationToken cancellationToken = default) =>
-        await HttpClient.GetAsync<String, ISnapshot, String, JsonSnapshot>(
-            await request.Validate().GetUriBuilderAsync(HttpClient, "snapshots").ConfigureAwait(false),
-            StringComparer.Ordinal, withSymbol<ISnapshot, JsonSnapshot>,
-            RateLimitHandler, cancellationToken).ConfigureAwait(false);
+	public async Task<IReadOnlyDictionary<String, ISnapshot>> ListSnapshotsAsync(
+	LatestMarketDataListRequest request,
+	CancellationToken cancellationToken = default)
+	{
+		var snapshots = await HttpClient.GetAsync<String, ISnapshot, String, JsonSnapshot>(
+			await request.Validate().GetUriBuilderAsync(HttpClient, "snapshots").ConfigureAwait(false),
+			StringComparer.Ordinal, withSymbol<ISnapshot, JsonSnapshot>,
+			RateLimitHandler, cancellationToken).ConfigureAwait(false);
 
-    public Task<IReadOnlyDictionary<String, String>> ListExchangesAsync(
+		// Double-check that symbols are set correctly
+		var result = new Dictionary<String, ISnapshot>(StringComparer.Ordinal);
+		foreach (var pair in snapshots)
+		{
+			var snapshot = pair.Value as JsonSnapshot;
+			if (snapshot != null)
+			{
+				snapshot.SetSymbol(pair.Key);
+				result[pair.Key] = snapshot;
+			}
+		}
+
+		return result;
+	}
+
+	public Task<IReadOnlyDictionary<String, String>> ListExchangesAsync(
         CancellationToken cancellationToken = default) =>
         HttpClient.GetAsync<IReadOnlyDictionary<String, String>, Dictionary<String, String>>(
             "meta/exchanges", RateLimitHandler, cancellationToken);

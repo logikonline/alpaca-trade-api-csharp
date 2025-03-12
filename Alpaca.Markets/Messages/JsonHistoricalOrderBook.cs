@@ -4,9 +4,10 @@
 [SuppressMessage(
     "Microsoft.Performance", "CA1812:Avoid uninstantiated internal classes",
     Justification = "Object instances of this class will be created by Newtonsoft.JSON library.")]
-internal sealed class JsonHistoricalOrderBook : IOrderBook, ISymbolMutable 
+internal sealed class JsonHistoricalOrderBook : IOrderBook, ISymbolMutable
 {
-    [JsonProperty(PropertyName = "t", Required = Required.Always)]
+	[JsonConverter(typeof(AssumeUtcIsoDateTimeConverter))]
+	[JsonProperty(PropertyName = "t", Required = Required.Always)]
     public DateTime TimestampUtc { get; set; }
 
     [ExcludeFromCodeCoverage]

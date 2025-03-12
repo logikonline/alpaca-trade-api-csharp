@@ -56,7 +56,8 @@ internal static class HttpResponseMethodExtensions
 			new TimeOnlyConverter(),
 			new AssetAttributesEnumConverter()
 		},
-		Error = (sender, args) => {
+		Error = (sender, args) =>
+		{
 			System.Diagnostics.Debug.WriteLine($"Error deserializing: {args.ErrorContext.Error}");
 			System.Diagnostics.Debug.WriteLine($"Member: {args.ErrorContext.Member}");
 			System.Diagnostics.Debug.WriteLine($"Path: {args.ErrorContext.Path}");
@@ -69,7 +70,6 @@ internal static class HttpResponseMethodExtensions
 		}
 	};
 
-	// Custom converter for handling trimmed decimal values
 	public sealed class TrimAwareDecimalConverter : JsonConverter
 	{
 		public override bool CanConvert(Type objectType)
@@ -79,22 +79,54 @@ internal static class HttpResponseMethodExtensions
 
 		public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
 		{
+			// Handle null values
 			if (reader.TokenType == JsonToken.Null)
 			{
 				return objectType == typeof(decimal?) ? (decimal?)null : 0m;
 			}
 
-			// Handle strings that might be trimmed
+			// Handle string values (with trim)
 			if (reader.TokenType == JsonToken.String)
 			{
-				var value = reader.Value?.ToString();
-				if (value != null && decimal.TryParse(value, out decimal result))
+				var value = reader.Value?.ToString()?.Trim();
+				if (!string.IsNullOrEmpty(value) && decimal.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal result))
 				{
 					return result;
 				}
+				return objectType == typeof(decimal?) ? (decimal?)null : 0m;
 			}
 
-			return reader.Value is decimal dec ? dec : 0m;
+			// Handle numeric values (Integer or Float)
+			if (reader.TokenType == JsonToken.Integer || reader.TokenType == JsonToken.Float)
+			{
+				try
+				{
+					// Convert the numeric value to decimal, regardless of its original type
+					return Convert.ToDecimal(reader.Value, CultureInfo.InvariantCulture);
+				}
+				catch (InvalidCastException ex)
+				{
+					// Only catch specific conversion exceptions
+					var d = ex.Message;
+					return objectType == typeof(decimal?) ? (decimal?)null : 0m;
+				}
+				catch (OverflowException ex)
+				{
+					// Handle overflow (when number is too large for decimal)
+					var d = ex.Message;
+					return objectType == typeof(decimal?) ? (decimal?)null : 0m;
+				}
+				catch (FormatException ex)
+				{
+					// Handle format errors
+					var d = ex.Message;
+					return objectType == typeof(decimal?) ? (decimal?)null : 0m;
+				}
+				// Let other exceptions propagate
+			}
+
+			// Default case - return default value
+			return objectType == typeof(decimal?) ? (decimal?)null : 0m;
 		}
 
 		public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
@@ -122,46 +154,46 @@ internal static class HttpResponseMethodExtensions
 		{
 			try
 			{
-				// Check if the JSON starts with an array or object
-				var firstNonWhitespaceChar = rawJson.TrimStart()[0];
+			//	// Check if the JSON starts with an array or object
+			//	var firstNonWhitespaceChar = rawJson.TrimStart()[0];
 
-				if (firstNonWhitespaceChar == '[')
-				{
-					// Handle array JSON
-					var jArray = JArray.Parse(rawJson);
-					var serializer = JsonSerializer.Create(StandardSerializerSettings);
+			//	if (firstNonWhitespaceChar == '[')
+			//	{
+			//		// Handle array JSON
+			//		var jArray = JArray.Parse(rawJson);
+			//		var serializer = JsonSerializer.Create(StandardSerializerSettings);
 
-					// If the expected type is a collection/list
-					if (typeof(TApi).IsGenericType &&
-						(typeof(IEnumerable<>).IsAssignableFrom(typeof(TApi).GetGenericTypeDefinition()) ||
-						 typeof(ICollection<>).IsAssignableFrom(typeof(TApi).GetGenericTypeDefinition())))
-					{
-						using (var jsonTokenReader = new JTokenReader(jArray))
-						{
-							var result = (TJson)serializer.Deserialize(jsonTokenReader, typeof(TJson))!;
-							if (result == null)
-							{
-								throw new RestClientErrorException("Unable to deserialize JSON array response.");
-							}
-							return result;
-						}
-					}
-				}
-				else if (firstNonWhitespaceChar == '{')
-				{
-					// Current implementation for object JSON
-					var jObject = JObject.Parse(rawJson);
-					var serializer = JsonSerializer.Create(StandardSerializerSettings);
-					using (var jsonTokenReader = new JTokenReader(jObject))
-					{
-						var result = (TJson)serializer.Deserialize(jsonTokenReader, typeof(TJson))!;
-						if (result == null)
-						{
-							throw new RestClientErrorException("Unable to deserialize JSON response message.");
-						}
-						return result;
-					}
-				}
+			//		// If the expected type is a collection/list
+			//		if (typeof(TApi).IsGenericType &&
+			//			(typeof(IEnumerable<>).IsAssignableFrom(typeof(TApi).GetGenericTypeDefinition()) ||
+			//			 typeof(ICollection<>).IsAssignableFrom(typeof(TApi).GetGenericTypeDefinition())))
+			//		{
+			//			using (var jsonTokenReader = new JTokenReader(jArray))
+			//			{
+			//				var result = (TJson)serializer.Deserialize(jsonTokenReader, typeof(TJson))!;
+			//				if (result == null)
+			//				{
+			//					throw new RestClientErrorException("Unable to deserialize JSON array response.");
+			//				}
+			//				return result;
+			//			}
+			//		}
+			//	}
+			//	else if (firstNonWhitespaceChar == '{')
+			//	{
+			//		// Current implementation for object JSON
+			//		var jObject = JObject.Parse(rawJson);
+			//		var serializer = JsonSerializer.Create(StandardSerializerSettings);
+			//		using (var jsonTokenReader = new JTokenReader(jObject))
+			//		{
+			//			var result = (TJson)serializer.Deserialize(jsonTokenReader, typeof(TJson))!;
+			//			if (result == null)
+			//			{
+			//				throw new RestClientErrorException("Unable to deserialize JSON response message.");
+			//			}
+			//			return result;
+			//		}
+			//	}
 
 				// Fallback to direct deserialization if above approaches don't match
 				var fallbackResult = JsonConvert.DeserializeObject<TJson>(rawJson, StandardSerializerSettings);

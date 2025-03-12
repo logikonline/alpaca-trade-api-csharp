@@ -399,6 +399,11 @@ Alpaca.Markets.IAccount.Multiplier.get -> Alpaca.Markets.Multiplier
 Alpaca.Markets.IAccount.NonMarginableBuyingPower.get -> decimal?
 Alpaca.Markets.IAccount.OptionsApprovedLevel.get -> Alpaca.Markets.OptionsTradingLevel?
 Alpaca.Markets.IAccount.OptionsBuyingPower.get -> decimal?
+Alpaca.Markets.IAccount.EffectiveBuyingPower.get -> decimal?
+Alpaca.Markets.IAccount.PortfolioValue.get -> decimal?
+Alpaca.Markets.IAccount.PositionMarketValue.get -> decimal?
+Alpaca.Markets.IAccount.BalanceAsOf.get -> string?
+Alpaca.Markets.IAccount.IntradayAdjustments.get -> decimal?
 Alpaca.Markets.IAccount.OptionsTradingLevel.get -> Alpaca.Markets.OptionsTradingLevel?
 Alpaca.Markets.IAccount.PendingTransferIn.get -> decimal?
 Alpaca.Markets.IAccount.PendingTransferOut.get -> decimal?

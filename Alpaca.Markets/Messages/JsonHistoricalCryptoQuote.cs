@@ -6,7 +6,8 @@
     Justification = "Object instances of this class will be created by Newtonsoft.JSON library.")]
 internal sealed class JsonHistoricalCryptoQuote : IQuote, ISymbolMutable
 {
-    [JsonProperty(PropertyName = "t", Required = Required.Always)]
+	[JsonConverter(typeof(AssumeUtcIsoDateTimeConverter))]
+	[JsonProperty(PropertyName = "t", Required = Required.Always)]
     public DateTime TimestampUtc { get; set; }
 
     [JsonProperty(PropertyName = "x", Required = Required.Default)]
