@@ -55,7 +55,8 @@ internal sealed class JsonAsset : IAsset
     public IReadOnlyList<AssetAttributes> Attributes => AttributesList;
 
     [JsonProperty(PropertyName = "attributes", Required = Required.Default)]
-    internal List<AssetAttributes> AttributesList { get; [ExcludeFromCodeCoverage] set; } = [];
+	[JsonConverter(typeof(AssetAttributesListConverter))]
+	internal List<AssetAttributes> AttributesList { get; [ExcludeFromCodeCoverage] set; } = [];
 
     [ExcludeFromCodeCoverage]
     public override String ToString() =>

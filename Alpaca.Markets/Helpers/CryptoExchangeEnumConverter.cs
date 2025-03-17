@@ -12,3 +12,4 @@ internal sealed class CryptoExchangeEnumConverter : StringEnumConverter
         JsonSerializer serializer) =>
         CryptoExchange.Unknown.FromEnumString(reader);
 }
+//AssetAttributeEnumConverter

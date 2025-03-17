@@ -54,6 +54,7 @@ internal static class HttpResponseMethodExtensions
 			new AssumeUtcIsoDateTimeConverter(),
 			new DateOnlyConverter(),
 			new TimeOnlyConverter(),
+			new AssetAttributesListConverter(),
 			new AssetAttributesEnumConverter()
 		},
 		Error = (sender, args) =>
