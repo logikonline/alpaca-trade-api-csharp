@@ -63,7 +63,11 @@
 
   <PropertyGroup Condition="($(TargetFramework.StartsWith('net8')))">
     <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
-    <IsTrimmable>true</IsTrimmable>
+    <IsTrimmable>false</IsTrimmable>
+    <EnableAot>false</EnableAot>
+    <EnableNativeAot>false</EnableNativeAot>
+    <TrimmerDefaultAction>CopyUsed</TrimmerDefaultAction>
+    <EnableAPICompat>false</EnableAPICompat>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

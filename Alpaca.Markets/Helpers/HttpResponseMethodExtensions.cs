@@ -9,7 +9,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Alpaca.Markets;
 
@@ -200,7 +200,26 @@ internal static class HttpResponseMethodExtensions
 				var fallbackResult = JsonConvert.DeserializeObject<TJson>(rawJson, StandardSerializerSettings);
 				if (fallbackResult == null)
 				{
-					throw new RestClientErrorException("Unable to deserialize JSON response message.");
+					var jsonPreview = rawJson.Length > 500
+						? rawJson[..500] + "..."
+						: rawJson;
+
+					var typeDetails = "";// $"Properties on {typeof(TJson).FullName}:\n" + string.Join("\n", typeof(TJson).GetProperties().Select(p => $"  - {p.Name} ({p.PropertyType.Name}) [Readable: {p.CanRead}, Writable: {p.CanWrite}]"));
+
+					var ctorDetails = ""; //string.Join("\n", typeof(TJson).GetConstructors(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).Select(c => $"  - {c}"));
+
+					throw new RestClientErrorException(
+						$"Deserialization returned null without throwing.\n" +
+						$"Target Type: {typeof(TJson).FullName}\n" +
+						$"Raw JSON Preview: {jsonPreview}\n\n" +
+						$"This may be due to:\n" +
+						$"- Internal constructor\n" +
+						$"- Private setters\n" +
+						$"- Missing [JsonProperty] or opt-in serialization\n" +
+						$"- Trimmed type in Release\n\n" +
+						$"Constructors:\n{ctorDetails}\n\n" +
+						$"Properties:\n{typeDetails}"
+					);
 				}
 				return fallbackResult;
 			}
